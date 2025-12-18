@@ -32,7 +32,7 @@ export const DrawerProvider = ({ children }) => {
 
   const addDrawer = (name, description) => {
     const newDrawer = {
-      id: Date.now().toString(),
+      id: `${Date.now()}-${Math.random()}`,
       name,
       description,
       objects: [],

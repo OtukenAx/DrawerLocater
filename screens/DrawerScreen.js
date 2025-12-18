@@ -3,11 +3,19 @@ import { View, Text, Button, FlatList, TouchableOpacity, StyleSheet } from 'reac
 import { DrawerContext } from '../src/DrawerContext';
 
 export default function DrawerScreen({ route, navigation }) {
-  const { drawerId } = route.params;
+  const drawerId = route?.params?.drawerId;
   const { drawers } = useContext(DrawerContext);
 
+  if (!drawerId) {
+    return (
+      <View style={styles.container}>
+        <Text>Invalid drawer ID</Text>
+      </View>
+    );
+  }
+
   const drawer = drawers.find(d => d.id === drawerId);
-  const drawerObjects = drawer ? drawer.objects : [];
+  const drawerObjects = drawer?.objects ?? [];
 
   const renderObject = ({ item }) => (
     <TouchableOpacity style={styles.objectItem} onPress={() => navigation.navigate('EditObject', { objectId: item.id })}>
@@ -32,7 +40,7 @@ export default function DrawerScreen({ route, navigation }) {
       <Button title="Add Object" onPress={() => navigation.navigate('AddObject', { drawerId })} />
       <FlatList
         data={drawerObjects}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => String(item.id)}
         renderItem={renderObject}
       />
     </View>

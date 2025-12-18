@@ -18,7 +18,7 @@ export default function HomeScreen({ navigation }) {
       <Button title="Add Drawer" onPress={() => navigation.navigate('AddDrawer')} />
       <FlatList
         data={safeDrawers}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => String(item.id)}
         renderItem={renderDrawer}
       />
     </View>
