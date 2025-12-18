@@ -22,7 +22,7 @@ export default function EditObjectScreen({ route, navigation }) {
     if (name.trim() && quantity.trim()) {
       const drawer = drawers.find(d => d.objects.some(obj => obj.id === objectId));
       if (drawer) {
-        updateObject(drawer.id, objectId, { name, quantity: parseInt(quantity), description });
+        updateObject(drawer.id, objectId, name, quantity, description);
         navigation.goBack();
       } else {
         Alert.alert('Error', 'Drawer not found.');

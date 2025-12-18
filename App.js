@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { DrawerProvider } from './src/DrawerContext';
@@ -10,18 +11,43 @@ import EditObjectScreen from './screens/EditObjectScreen';
 
 const Stack = createStackNavigator();
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.log('Error caught by boundary:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <Text>Something went wrong.</Text>;
+    }
+
+    return this.props.children;
+  }
+}
+
 export default function App() {
   return (
-    <DrawerProvider>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Drawer Inventory' }} />
-          <Stack.Screen name="AddDrawer" component={AddDrawerScreen} options={{ title: 'Add Drawer' }} />
-          <Stack.Screen name="Drawer" component={DrawerScreen} options={{ title: 'Drawer' }} />
-          <Stack.Screen name="AddObject" component={AddObjectScreen} options={{ title: 'Add Object' }} />
-          <Stack.Screen name="EditObject" component={EditObjectScreen} options={{ title: 'Edit Object' }} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </DrawerProvider>
+    <ErrorBoundary>
+      <DrawerProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Drawer Inventory' }} />
+            <Stack.Screen name="AddDrawer" component={AddDrawerScreen} options={{ title: 'Add Drawer' }} />
+            <Stack.Screen name="Drawer" component={DrawerScreen} options={{ title: 'Drawer' }} />
+            <Stack.Screen name="AddObject" component={AddObjectScreen} options={{ title: 'Add Object' }} />
+            <Stack.Screen name="EditObject" component={EditObjectScreen} options={{ title: 'Edit Object' }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </DrawerProvider>
+    </ErrorBoundary>
   );
 }
