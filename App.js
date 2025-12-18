@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import * as Location from 'expo-location';
 import { DrawerProvider } from './src/DrawerContext';
 import HomeScreen from './screens/HomeScreen';
 import AddDrawerScreen from './screens/AddDrawerScreen';
@@ -35,6 +36,26 @@ class ErrorBoundary extends React.Component {
 }
 
 export default function App() {
+  useEffect(() => {
+    const requestPermissions = async () => {
+      try {
+        const { status: fgStatus } = await Location.requestForegroundPermissionsAsync();
+        if (fgStatus !== 'granted') {
+          console.log('Foreground location permission denied');
+        }
+
+        const { status: bgStatus } = await Location.requestBackgroundPermissionsAsync();
+        if (bgStatus !== 'granted') {
+          console.log('Background location permission denied');
+        }
+      } catch (error) {
+        console.log('Error requesting permissions:', error);
+      }
+    };
+
+    requestPermissions();
+  }, []);
+
   return (
     <ErrorBoundary>
       <DrawerProvider>

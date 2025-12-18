@@ -26,7 +26,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.initify.drawerinventory"
+      "package": "com.initify.drawerinventory",
+      "permissions": ["LOCATION", "LOCATION_BACKGROUND"]
     },
     "web": {
       "favicon": "./assets/favicon.png"

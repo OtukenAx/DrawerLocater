@@ -4,6 +4,7 @@ import { DrawerContext } from '../src/DrawerContext';
 
 export default function HomeScreen({ navigation }) {
   const { drawers } = useContext(DrawerContext);
+  const safeDrawers = Array.isArray(drawers) ? drawers : [];
 
   const renderDrawer = ({ item }) => (
     <TouchableOpacity style={styles.drawerItem} onPress={() => navigation.navigate('Drawer', { drawerId: item.id })}>
@@ -16,7 +17,7 @@ export default function HomeScreen({ navigation }) {
     <View style={styles.container}>
       <Button title="Add Drawer" onPress={() => navigation.navigate('AddDrawer')} />
       <FlatList
-        data={drawers}
+        data={safeDrawers}
         keyExtractor={(item) => item.id}
         renderItem={renderDrawer}
       />

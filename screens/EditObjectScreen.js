@@ -10,7 +10,9 @@ export default function EditObjectScreen({ route, navigation }) {
   const [description, setDescription] = useState('');
 
   useEffect(() => {
-    const object = drawers.flatMap(drawer => drawer.objects).find(obj => obj.id === objectId);
+    const safeDrawers = Array.isArray(drawers) ? drawers : [];
+    const allObjects = safeDrawers.flatMap(drawer => Array.isArray(drawer.objects) ? drawer.objects : []);
+    const object = allObjects.find(obj => obj.id === objectId);
     if (object) {
       setName(object.name);
       setQuantity(object.quantity.toString());
@@ -20,7 +22,8 @@ export default function EditObjectScreen({ route, navigation }) {
 
   const handleSave = () => {
     if (name.trim() && quantity.trim()) {
-      const drawer = drawers.find(d => d.objects.some(obj => obj.id === objectId));
+      const safeDrawers = Array.isArray(drawers) ? drawers : [];
+      const drawer = safeDrawers.find(d => Array.isArray(d.objects) && d.objects.some(obj => obj.id === objectId));
       if (drawer) {
         updateObject(drawer.id, objectId, name, quantity, description);
         navigation.goBack();
