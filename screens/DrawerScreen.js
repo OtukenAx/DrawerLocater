@@ -4,10 +4,10 @@ import { DrawerContext } from '../src/DrawerContext';
 
 export default function DrawerScreen({ route, navigation }) {
   const { drawerId } = route.params;
-  const { drawers, objects } = useContext(DrawerContext);
+  const { drawers } = useContext(DrawerContext);
 
   const drawer = drawers.find(d => d.id === drawerId);
-  const drawerObjects = objects.filter(obj => obj.drawerId === drawerId);
+  const drawerObjects = drawer ? drawer.objects : [];
 
   const renderObject = ({ item }) => (
     <TouchableOpacity style={styles.objectItem} onPress={() => navigation.navigate('EditObject', { objectId: item.id })}>

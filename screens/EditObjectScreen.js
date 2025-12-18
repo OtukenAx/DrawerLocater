@@ -3,36 +3,34 @@ import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { DrawerContext } from '../src/DrawerContext';
 
 export default function EditObjectScreen({ route, navigation }) {
-  const { drawerId, objectId } = route.params;
-  const { drawers, updateObject, deleteObject } = useContext(DrawerContext);
-  const drawer = drawers.find(d => d.id === drawerId);
-  const object = drawer?.objects.find(o => o.id === objectId);
+  const { objectId } = route.params;
+  const { drawers, updateObject } = useContext(DrawerContext);
+  const [name, setName] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [description, setDescription] = useState('');
 
-  const [name, setName] = useState(object?.name || '');
-  const [quantity, setQuantity] = useState(object?.quantity?.toString() || '');
-  const [description, setDescription] = useState(object?.description || '');
+  useEffect(() => {
+    const object = drawers.flatMap(drawer => drawer.objects).find(obj => obj.id === objectId);
+    if (object) {
+      setName(object.name);
+      setQuantity(object.quantity.toString());
+      setDescription(object.description);
+    }
+  }, [drawers, objectId]);
 
   const handleSave = () => {
     if (name.trim() && quantity.trim()) {
-      updateObject(drawerId, objectId, name, quantity, description);
-      navigation.goBack();
+      const drawer = drawers.find(d => d.objects.some(obj => obj.id === objectId));
+      if (drawer) {
+        updateObject(drawer.id, objectId, name, quantity, description);
+        navigation.goBack();
+      } else {
+        Alert.alert('Error', 'Drawer not found.');
+      }
     } else {
       Alert.alert('Error', 'Please enter name and quantity.');
     }
   };
-
-  const handleDelete = () => {
-    Alert.alert(
-      'Delete Object',
-      'Are you sure you want to delete this object?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', onPress: () => { deleteObject(drawerId, objectId); navigation.goBack(); } },
-      ]
-    );
-  };
-
-  if (!object) return null;
 
   return (
     <View style={styles.container}>
@@ -57,7 +55,6 @@ export default function EditObjectScreen({ route, navigation }) {
         multiline
       />
       <Button title="Save" onPress={handleSave} />
-      <Button title="Delete" onPress={handleDelete} color="red" />
     </View>
   );
 }
