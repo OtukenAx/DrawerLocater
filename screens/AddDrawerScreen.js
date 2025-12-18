@@ -9,7 +9,7 @@ export default function AddDrawerScreen({ navigation }) {
 
   const handleSave = () => {
     if (name.trim()) {
-      addDrawer(name, description);
+      addDrawer({ name, description });
       navigation.goBack();
     } else {
       Alert.alert('Error', 'Please enter a drawer name.');
